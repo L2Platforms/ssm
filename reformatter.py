@@ -132,23 +132,23 @@ class Reformatter(object):
         quotechar = '"'
 
         self.final_table.append(self.table_header)
-
+        last_time = None
         for key in self.formatted_table:
             track = []
-            trackNum = 1
+            track_num = 1
             for i, line in enumerate(self.formatted_table[key]):
                 line.append(self.convert_dt_to_ts(line[1]))
                 if i == 0:
-                    line[0] = quotechar + line[0] + '.' + str(trackNum) + quotechar
+                    line[0] = quotechar + line[0] + '.' + str(track_num) + quotechar
                 else:
                     if (line[-1] - last_time) >= 1209600:
 
                         if len(track) > 20 and (track[-1][-1] - track[0][-1]) >= 18*3600:
-                            trackNum += 1
+                            track_num += 1
                             for tLine in track:
                                 self.final_table.append(tLine[:-1])
                         track = []
-                    line[0] = quotechar + line[0] + '.' + str(trackNum) + quotechar
+                    line[0] = quotechar + line[0] + '.' + str(track_num) + quotechar
 
                 line[2] = quotechar + line[2] + quotechar
 
