@@ -11,13 +11,15 @@ class Reformatter(object):
     def __init__(self, in_file, start=0, gap='7d'):
         self.data = None
         self.data_dict = {}
+        self.final_table = []
         self.formatted_table = {}
         self.gap = gap
         self.in_file = in_file
-        self.out_file = self.in_file.replace('.csv', '_formatted.csv')
+        self.out_file = self.in_file.replace('.csv', '_formatted.txt')
         self.quality = ['1', '2', '3', 'A', 'B']
         self.radius = 6378100
         self.start = start
+        self.table_header = ['"id"', '"date"', '"lc"', '"lon"', '"lat"']
 
         self.gap_to_time()
         self.read_data()
@@ -106,21 +108,20 @@ class Reformatter(object):
         return ts
 
     def format_data(self):
-        quotechar = '"'
-        table_header = ['"id"', 'date', '"lc"', '"lon"', '"lat"']
+
+        # table_header = ['"id"', 'date', '"lc"', '"lon"', '"lat"']
 
         for iD in self.data_dict:
             if iD not in self.formatted_table:
                 self.formatted_table[iD] = []
-                self.formatted_table[iD].append(table_header)
+                # self.formatted_table[iD].append(table_header)
             for row in self.data_dict[iD]:
                 ts = self.convert_dt_to_ts(row[3])
 
                 if ts > self.start and row[5] in self.quality:
-                    id_str = quotechar + str(row[1]) + quotechar
-                    readable = datetime.datetime.fromtimestamp(ts).isoformat()
-                    date = readable.replace('T', ' ')
-                    lc = quotechar + str(row[5]) + quotechar
+                    id_str = str(row[1])
+                    date = row[3]
+                    lc = str(row[5])
                     lon = row[7]
                     lat = row[6]
 
@@ -128,9 +129,38 @@ class Reformatter(object):
                     self.formatted_table[iD].append(formatted_row)
 
     def create_tracks(self):
-        print('This still needs to be written')
+        quotechar = '"'
+
+        self.final_table.append(self.table_header)
+
+        for key in self.formatted_table:
+            track = []
+            trackNum = 1
+            for i, line in enumerate(self.formatted_table[key]):
+                line.append(self.convert_dt_to_ts(line[1]))
+                if i == 0:
+                    line[0] = quotechar + line[0] + '.' + str(trackNum) + quotechar
+                else:
+                    if (line[-1] - last_time) >= 1209600:
+
+                        if len(track) > 20 and (track[-1][-1] - track[0][-1]) >= 18*3600:
+                            trackNum += 1
+                            for tLine in track:
+                                self.final_table.append(tLine[:-1])
+                        track = []
+                    line[0] = quotechar + line[0] + '.' + str(trackNum) + quotechar
+
+                line[2] = quotechar + line[2] + quotechar
+
+                last_time = line[-1]
+
+                readable = datetime.datetime.fromtimestamp(self.convert_dt_to_ts(line[1])).isoformat()
+                line[1] = readable.replace('T', ' ')
+
+                track.append(line)
 
     def save_data(self):
+
         kwargs = {'newline': ''}
         mode = 'w'
         if sys.version_info < (3, 0):
@@ -138,8 +168,13 @@ class Reformatter(object):
             mode = 'wb'
 
         with open(self.out_file, mode, **kwargs) as cFile:
-            writer = csv.writer(cFile, delimiter=',')
-            writer.writerows(self.formatted_table)
+            for line in self.final_table:
+                for item in line[:-1]:
+                    cFile.write(str(item) + ',')
+
+                cFile.write(str(line[-1]) + '\n')
+            # writer = csv.writer(cFile, delimiter=',')
+            # writer.writerows(self.final_table)
 
 
 def main():
@@ -159,8 +194,7 @@ def main():
 
     ref = Reformatter(in_file=args.file, start=args.start_date, gap=args.gap)
     ref.format_data()
-    import pdb
-    pdb.set_trace()
+    ref.create_tracks()
     ref.save_data()
 
 
