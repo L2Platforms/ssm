@@ -36,7 +36,7 @@ class Reformatter(object):
             ts = self.convert_dt_to_ts(row[3])
 
             if row[5] not in self.quality or ts < self.start:
-                del(self.data[i])
+                del (self.data[i])
 
     def remove_duplicates(self):
         for i, row in enumerate(self.data):
@@ -65,7 +65,7 @@ class Reformatter(object):
                 time2 = self.convert_dt_to_ts(self.data_dict[iD][i][3])
                 speed = self.calculate_speed(lat1, lon1, lat2, lon2, time1, time2)
                 if speed > 2:
-                    del(self.data_dict[iD][i])
+                    del (self.data_dict[iD][i])
 
     def calculate_speed(self, lat1, lon1, lat2, lon2, time1, time2):
         lat1 = radians(lat1)
@@ -143,7 +143,7 @@ class Reformatter(object):
                 else:
                     if (line[-1] - last_time) >= 1209600:
 
-                        if len(track) > 20 and (track[-1][-1] - track[0][-1]) >= 18*3600:
+                        if len(track) > 20 and (track[-1][-1] - track[0][-1]) >= 18 * 3600:
                             track_num += 1
                             for tLine in track:
                                 self.final_table.append(tLine[:-1])
