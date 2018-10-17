@@ -27,10 +27,14 @@ https://github.com/L2Platforms/ssm
 2) You will need to know where your version of the reformatter code resides and where your data raw data resides. 
 For example, run:
 ```
-py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv
+py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv -a 2016-10-18T14:22:33
 ```
 3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
+
+####Notes:
+- py is the command to have the script be read and executed by python
+- You will need to know the datetime the tag went into service
 
 ### Output
 The output file should be able to be input into the R based SSM tool. 
