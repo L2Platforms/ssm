@@ -24,7 +24,7 @@ https://github.com/L2Platforms/ssm
 
 ### Run Reformatter.py
 1) Open up a Command Prompt
-2) You will need to know where your version of the reformatter code resides and where your data raw data resides
+2) You will need to know where your version of the reformatter code resides and where your data raw data resides. 
 For example, run:
 ```
 py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv
