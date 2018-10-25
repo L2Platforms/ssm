@@ -23,11 +23,17 @@ https://github.com/L2Platforms/ssm
 **NOTE: This process will change once the repository is made private
 
 ### Run Reformatter.py
-1) Open up a Command Prompt
+1) Open up a Command Prompt from start menu (type command prompt at start menu)
 2) You will need to know where your version of the reformatter code resides and where your data raw data resides. 
 For example, run:
 ```
 py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv -a 2016-10-18T14:22:33
+```
+or
+```
+py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatte
+r.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-0
+4-18T00:00:00
 ```
 3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
