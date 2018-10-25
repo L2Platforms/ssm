@@ -31,9 +31,7 @@ py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\15
 ```
 or
 ```
-py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatte
-r.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-0
-4-18T00:00:00
+py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00
 ```
 3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
