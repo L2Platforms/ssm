@@ -18,6 +18,8 @@ class Reformatter(object):
         self.out_file = self.in_file.replace('.csv', '_formatted.txt')
         self.quality = ['1', '2', '3', 'A', 'B']
         self.radius = 6378100
+        if isinstance(start, str):
+            start = self.convert_dt_to_ts(start)
         self.start = start
         self.table_header = ['"id"', '"date"', '"lc"', '"lon"', '"lat"']
 
