@@ -19,7 +19,7 @@ class Reformatter(object):
         self.quality = ['1', '2', '3', 'A', 'B']
         self.radius = 6378100
         if isinstance(start, str):
-            start = self.convert_dt_to_ts(start)
+            start = self.convert_input_dt_to_ts(start)
         self.start = start
         self.table_header = ['"id"', '"date"', '"lc"', '"lon"', '"lat"']
 
@@ -107,6 +107,11 @@ class Reformatter(object):
     @staticmethod
     def convert_dt_to_ts(dt):
         ts = time.mktime(datetime.datetime.strptime(dt, "%H:%M:%S %d-%b-%Y").timetuple())
+        return ts
+
+    @staticmethod
+    def convert_input_dt_to_ts(dt):
+        ts = time.mktime(datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S").timetuple())
         return ts
 
     def format_data(self):
