@@ -39,6 +39,8 @@ If you wish to vary the amount of time in the maximum gap you could run this com
 py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00 -g 5d
 ```
 
+You can use this time flag to indicate d for days or h for hours. The above example would use a maximum gap of 5 days. If you do not use the "-g" flag, the program will default to 14 days.
+
 3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
 
