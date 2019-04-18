@@ -34,7 +34,7 @@ class Reformatter(object):
         for i, row in reversed(list(enumerate(self.data))):
             if i == 0 or not row:
                 continue
-
+            
             ts = self.convert_dt_to_ts(row[3])
 
             if row[5] not in self.quality or ts < self.start:
@@ -106,7 +106,11 @@ class Reformatter(object):
 
     @staticmethod
     def convert_dt_to_ts(dt):
-        ts = time.mktime(datetime.datetime.strptime(dt, "%H:%M:%S %d-%b-%Y").timetuple())
+        # try:
+        # ts = time.mktime(datetime.datetime.strptime(dt, "%H:%M:%S %d-%b-%Y").timetuple())
+        ts = time.mktime(datetime.datetime.strptime(dt, "%m/%d/%Y %H:%M").timetuple())
+        # except ValueError:
+        #     raise ValueError('Time in wrong unacceptable format')
         return ts
 
     @staticmethod
