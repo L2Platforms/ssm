@@ -27,21 +27,33 @@ https://github.com/L2Platforms/ssm
 2) You will need to know where your version of the reformatter code resides and where your data raw data resides. 
 For example, run:
 ```
-py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv -a 2016-10-18T14:22:33
+py C:\Users\user\Desktop\ssm-master\reformatter.py -f C:\Users\user\Downloads\159313-Locations.csv
 ```
 or
 ```
-py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00
+py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a "C:\Users\Neil Hammerschlag\Desktop\SSM\start_data.csv"
 ```
+The "-f" flag tells the code where the input file the user wishes to filter is stored
 
-If you wish to vary the amount of time in the maximum gap you could run this command:
+The "-a" flag tells the code where to find the .csv file containing the start date/time meta data. If this flag is not 
+used, All values (After Jan 1, 1970 00:00:00) will be used in the analysis. 
+This file should be formatted as two (2) coulumns without headers. The first column should be a list of ID numbers and the second 
+column should be their corresponding start datetimes in the format YYYY-MM-DDTHH:MM:SS (i.e., 2019-04-23T00:00:00).
+
+An example of the table would look like:
+
+| 11111 | 2017-04-18T00:00:00 |
+|-------|---------------------|
+| 22222 | 2015-11-05T12:30:47 
+
+**NOTE: This file can be named anything as long as it is saved as a plain .csv file (e.g., "my_start_data.csv"). No Encodings (e.g., UTF-8)
+
+The "-g" flag tells the code the maximum gap you wish to use. If the "-g" flag is not used, the default value is 14 days.
+An example using a 5 day gap is as follows:
 ```
 py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00 -g 5d
 ```
-
-You can use this time flag to indicate d for days or h for hours. The above example would use a maximum gap of 5 days. If you do not use the "-g" flag, the program will default to 14 days.
-
-3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
+A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
 
 ####Notes:
