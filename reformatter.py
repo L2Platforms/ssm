@@ -8,7 +8,7 @@ from math import sin, cos, sqrt, atan2, radians
 
 
 class Reformatter(object):
-    def __init__(self, in_file, start=0, gap='7d'):
+    def __init__(self, in_file, start_file=None, gap='7d'):
         self.data = None
         self.data_dict = {}
         self.final_table = []
@@ -18,9 +18,9 @@ class Reformatter(object):
         self.out_file = self.in_file.replace('.csv', '_formatted.txt')
         self.quality = ['1', '2', '3', 'A', 'B']
         self.radius = 6378100
-        if isinstance(start, str):
-            start = self.convert_input_dt_to_ts(start)
-        self.start = start
+        self.start = {'UNK': 0}
+        if start_file:
+            self.unpack_start_dates(start_file)
         self.table_header = ['"id"', '"date"', '"lc"', '"lon"', '"lat"']
 
         self.gap_to_time()
@@ -29,15 +29,31 @@ class Reformatter(object):
         self.remove_duplicates()
         self.remove_high_speed()
 
+    def unpack_start_dates(self, start_file):
+        kwargs = {'newline': ''}
+        mode = 'r'
+        if sys.version_info < (3, 0):
+            kwargs.pop('newline', None)
+            mode = 'rb'
+        with open(start_file, mode, **kwargs) as cFile:
+            reader = csv.reader(cFile, delimiter=',', quotechar='"')
+            start_array = [row for row in reader]
+            for row in start_array:
+                self.start[row[0]] = self.convert_input_dt_to_ts(row[1])
+
     def remove_quality_and_time(self):
 
         for i, row in reversed(list(enumerate(self.data))):
             if i == 0 or not row:
                 continue
-
             ts = self.convert_dt_to_ts(row[3])
 
-            if row[5] not in self.quality or ts < self.start:
+            if row[0] in self.start:
+                start_ts = self.start[row[0]]
+            else:
+                start_ts = self.start['UNK']
+
+            if row[5] not in self.quality or ts < start_ts:
                 del (self.data[i])
 
     def remove_duplicates(self):
@@ -106,7 +122,10 @@ class Reformatter(object):
 
     @staticmethod
     def convert_dt_to_ts(dt):
-        ts = time.mktime(datetime.datetime.strptime(dt, "%H:%M:%S %d-%b-%Y").timetuple())
+        try:
+            ts = time.mktime(datetime.datetime.strptime(dt, "%H:%M:%S %d-%b-%Y").timetuple())
+        except:
+            ts = time.mktime(datetime.datetime.strptime(dt, "%m/%d/%Y %H:%M").timetuple())
         return ts
 
     @staticmethod
@@ -125,7 +144,12 @@ class Reformatter(object):
             for row in self.data_dict[iD]:
                 ts = self.convert_dt_to_ts(row[3])
 
-                if ts > self.start and row[5] in self.quality:
+                if row[0] in self.start:
+                    start_ts = self.start[row[0]]
+                else:
+                    start_ts = self.start['UNK']
+
+                if ts > start_ts and row[5] in self.quality:
                     id_str = str(row[1])
                     date = row[3]
                     lc = str(row[5])
@@ -189,7 +213,7 @@ def main():
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--file', '-f', default=None, help='Must be a .csv file')
-    parser.add_argument('--start_date', '-a', default=0, help='Start Datetime of tag (YYYY-MM-DDThh:mm:ss)')
+    parser.add_argument('--start_date', '-a', default=None, help='Start Datetime of tag (YYYY-MM-DDThh:mm:ss)')
     parser.add_argument('--gap', '-g', default='14d',
                         help='Defines the acceptable gap between tracks in days or hours (e.g., 7d or '
                              '72h, etc)')
@@ -197,9 +221,12 @@ def main():
     args = parser.parse_args()
 
     if not args.file.endswith('.csv'):
-        raise ValueError('Invalid File Type!!! Please input .csv file')
+        raise ValueError('Invalid Input File Type!!! Please input .csv file')
 
-    ref = Reformatter(in_file=args.file, start=args.start_date, gap=args.gap)
+    # if not args.start_date.endswith('.csv'):
+    #     raise ValueError('Invalid Start_Date File Type!!! Please input .csv file')
+
+    ref = Reformatter(in_file=args.file, start_file=args.start_date, gap=args.gap)
     ref.format_data()
     ref.create_tracks()
     ref.save_data()
