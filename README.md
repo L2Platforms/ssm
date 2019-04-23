@@ -33,15 +33,16 @@ or
 ```
 py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00
 ```
+The "-f" flag tells the code where the input file the user wishes to filter is stored
 
-If you wish to vary the amount of time in the maximum gap you could run this command:
+The "-a" flag tells the code the beginning date/time you wish to use, thus ignoring points prior to the indicated time.
+
+The "-g" flag tells the code the maximum gap you wish to use. If the "-g" flag is not used, the default value is 14 days.
+An example using a 5 day gab is as follows:
 ```
 py "C:\Users\Neil Hammerschlag\Desktop\SSM\reformatter.py" -f "C:\Users\Neil Hammerschlag\Desktop\SSM\175440-Locations.csv" -a 2017-04-18T00:00:00 -g 5d
 ```
-
-You can use this time flag to indicate d for days or h for hours. The above example would use a maximum gap of 5 days. If you do not use the "-g" flag, the program will default to 14 days.
-
-3) A file will be generated and placed in the same directory as the raw data. This file will be named something like 
+A file will be generated and placed in the same directory as the raw data. This file will be named something like 
 "159313-Locations_formatted.txt"
 
 ####Notes:
