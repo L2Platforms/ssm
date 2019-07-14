@@ -85,6 +85,7 @@ class Reformatter(object):
                 if speed > 2:
                     del (self.data_dict[iD][i])
 
+
     def calculate_speed(self, lat1, lon1, lat2, lon2, time1, time2):
         lat1 = radians(lat1)
         lon1 = radians(lon1)
@@ -172,9 +173,9 @@ class Reformatter(object):
                 if i == 0:
                     line[0] = quotechar + line[0] + '.' + str(track_num) + quotechar
                 else:
-                    if (line[-1] - last_time) >= 1209600:
+                    if (line[-1] - last_time) >= self.gap:
 
-                        if len(track) > 20 and (track[-1][-1] - track[0][-1]) >= 18 * 3600:
+                        if len(track) > 20: #and (track[-1][-1] - track[0][-1]) >= 18 * 3600:
                             track_num += 1
                             for tLine in track:
                                 self.final_table.append(tLine[:-1])
@@ -213,7 +214,7 @@ def main():
     parser = argparse.ArgumentParser(description=desc)
 
     parser.add_argument('--file', '-f', default=None, help='Must be a .csv file')
-    parser.add_argument('--start_date', '-a', default=None, help='Start Datetime of tag (YYYY-MM-DDThh:mm:ss)')
+    parser.add_argument('--start_file', '-a', default=None, help='Start file')
     parser.add_argument('--gap', '-g', default='14d',
                         help='Defines the acceptable gap between tracks in days or hours (e.g., 7d or '
                              '72h, etc)')
@@ -226,7 +227,8 @@ def main():
     # if not args.start_date.endswith('.csv'):
     #     raise ValueError('Invalid Start_Date File Type!!! Please input .csv file')
 
-    ref = Reformatter(in_file=args.file, start_file=args.start_date, gap=args.gap)
+
+    ref = Reformatter(in_file=args.file, start_file=args.start_file, gap=args.gap)
     ref.format_data()
     ref.create_tracks()
     ref.save_data()
