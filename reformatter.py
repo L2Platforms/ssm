@@ -173,7 +173,7 @@ class Reformatter(object):
                 if i == 0:
                     line[0] = quotechar + line[0] + '.' + str(track_num) + quotechar
                 else:
-                    if (line[-1] - last_time) >= self.gap or i == len(self.formatted_table[key]) - 1:
+                    if (line[-1] - last_time) >= self.gap:
 
                         # if len(track) > 20: #and (track[-1][-1] - track[0][-1]) >= 18 * 3600:
                         track_num += 1
@@ -190,6 +190,9 @@ class Reformatter(object):
                 line[1] = readable.replace('T', ' ')
 
                 track.append(line)
+
+            for tLine in track:
+                self.final_table.append(tLine[:-1])
 
     def save_data(self):
 
